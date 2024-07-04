@@ -21,10 +21,10 @@ const AdminDashboard = () => {
         setSearchCriteria(e.target.value);
         const filtered = applications.filter(
             (app) =>
-                app.firstName.includes(e.target.value) ||
-                app.lastName.includes(e.target.value) ||
+                app.fullName.includes(e.target.value) ||
                 app.email.includes(e.target.value) ||
-                app.desiredCourse.includes(e.target.value)
+                app.phone.includes(e.target.value) ||
+                app.courseUtility.includes(e.target.value)
         );
         setFilteredApplications(filtered);
     };
@@ -32,7 +32,7 @@ const AdminDashboard = () => {
     const handleStatusChange = async (id, status) => {
         await apiService.updateApplicationStatus(id, status);
         const updatedApplications = applications.map((app) =>
-            app.id === id ? { ...app, status } : app
+            app._id === id ? { ...app, status } : app
         );
         setApplications(updatedApplications);
         setFilteredApplications(updatedApplications);
@@ -105,11 +105,19 @@ const AdminDashboard = () => {
                     <thead>
                         <tr>
                             {[
-                                "First Name",
-                                "Last Name",
+                                "Full Name",
                                 "Email",
-                                "Phone Number",
-                                "Desired Course",
+                                "Phone",
+                                "Age",
+                                "Gender",
+                                "Sector",
+                                "Organization",
+                                "Job Title",
+                                "Excel Knowledge",
+                                "Laptop",
+                                "Offline Attendance",
+                                "Course Utility",
+                                "Next Steps",
                                 "Created At",
                                 "Last Modified At",
                                 "Status",
@@ -126,15 +134,9 @@ const AdminDashboard = () => {
                     </thead>
                     <tbody>
                         {filteredApplications.map((app) => (
-                            <tr key={app.id}>
-                                <td
-                                    className="py-2 px-4 border-b border-gray-200 hover:bg-gray-50"
-                                    title={`Phone: ${app.phone}\nCourse: ${app.desiredCourse}\nCreated: ${app.createdAt}\nModified: ${app.modifiedAt}`}
-                                >
-                                    {app.firstName}
-                                </td>
+                            <tr key={app._id}>
                                 <td className="py-2 px-4 border-b border-gray-200">
-                                    {app.lastName}
+                                    {app.fullName}
                                 </td>
                                 <td className="py-2 px-4 border-b border-gray-200">
                                     {app.email}
@@ -143,7 +145,34 @@ const AdminDashboard = () => {
                                     {app.phone}
                                 </td>
                                 <td className="py-2 px-4 border-b border-gray-200">
-                                    {app.desiredCourse}
+                                    {app.age}
+                                </td>
+                                <td className="py-2 px-4 border-b border-gray-200">
+                                    {app.gender}
+                                </td>
+                                <td className="py-2 px-4 border-b border-gray-200">
+                                    {app.sector}
+                                </td>
+                                <td className="py-2 px-4 border-b border-gray-200">
+                                    {app.organization}
+                                </td>
+                                <td className="py-2 px-4 border-b border-gray-200">
+                                    {app.jobTitle}
+                                </td>
+                                <td className="py-2 px-4 border-b border-gray-200">
+                                    {app.excelKnowledge}
+                                </td>
+                                <td className="py-2 px-4 border-b border-gray-200">
+                                    {app.laptop}
+                                </td>
+                                <td className="py-2 px-4 border-b border-gray-200">
+                                    {app.offlineAttendance}
+                                </td>
+                                <td className="py-2 px-4 border-b border-gray-200">
+                                    {app.courseUtility}
+                                </td>
+                                <td className="py-2 px-4 border-b border-gray-200">
+                                    {app.nextSteps}
                                 </td>
                                 <td className="py-2 px-4 border-b border-gray-200">
                                     {app.createdAt}
@@ -159,7 +188,7 @@ const AdminDashboard = () => {
                                         className="bg-blue-500 text-white px-2 py-1 rounded mr-2 hover:bg-blue-600"
                                         onClick={() =>
                                             handleStatusChange(
-                                                app.id,
+                                                app._id,
                                                 "Approved"
                                             )
                                         }
@@ -169,7 +198,10 @@ const AdminDashboard = () => {
                                     <button
                                         className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
                                         onClick={() =>
-                                            handleStatusChange(app.id, "Denied")
+                                            handleStatusChange(
+                                                app._id,
+                                                "Denied"
+                                            )
                                         }
                                     >
                                         Deny
